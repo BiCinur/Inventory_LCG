@@ -15,7 +15,10 @@ def create_app() -> tuple[App, Settings]:
     settings = Settings.from_env()
     settings.validate()
 
-    app_kwargs = {"token": settings.slack_bot_token}
+    app_kwargs = {
+        "token": settings.slack_bot_token,
+        "token_verification_enabled": not settings.slack_skip_auth_test,
+    }
     if settings.slack_signing_secret:
         app_kwargs["signing_secret"] = settings.slack_signing_secret
 

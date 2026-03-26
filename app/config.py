@@ -16,6 +16,7 @@ class Settings:
     slack_bot_token: str
     slack_app_token: str
     slack_signing_secret: str
+    slack_skip_auth_test: bool
     data_dir: Path
     port: int = 3000
 
@@ -28,6 +29,8 @@ class Settings:
             slack_bot_token=os.getenv("SLACK_BOT_TOKEN", "").strip(),
             slack_app_token=os.getenv("SLACK_APP_TOKEN", "").strip(),
             slack_signing_secret=os.getenv("SLACK_SIGNING_SECRET", "").strip(),
+            slack_skip_auth_test=os.getenv("SLACK_SKIP_AUTH_TEST", "0").strip().lower()
+            in {"1", "true", "yes", "on"},
             data_dir=data_dir,
             port=int(os.getenv("PORT", "3000")),
         )

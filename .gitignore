@@ -3,8 +3,13 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
+.python/
+.test_tmp/
 .env
 .env.*
 !.env.example
+get-pip.py
+python-*.exe
+python-*-embed-amd64.zip
 Thumbs.db
 Desktop.ini

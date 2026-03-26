@@ -57,10 +57,17 @@ The repo now includes a working scaffold for:
    - `SLACK_BOT_TOKEN`
    - `SLACK_APP_TOKEN` for Socket Mode
    - `SLACK_SIGNING_SECRET` only if you want HTTP mode instead
+   - `SLACK_SKIP_AUTH_TEST=1` if you want local/offline smoke tests without hitting Slack during app creation
 5. Replace the sample rows in `data/users.csv`, `data/projects.csv`, and `data/vendors.csv` with your real team data.
 6. Seed `data/inventory_items.csv` with your real stock.
 7. Run `python scripts/validate_csv.py`.
 8. Start the bot with `python -m app.bot.slack_app`.
+
+If you are using the repo-local interpreter created in this workspace, the equivalent commands are:
+
+- `.\.python\python.exe .\scripts\validate_csv.py`
+- `.\.python\python.exe -m unittest discover -s tests -v`
+- `.\.python\python.exe -m app.bot.slack_app`
 
 ## Slack setup
 
