@@ -1,0 +1,2 @@
+event_id,request_id,event_at,actor_user_id,actor_name,event_type,old_status,new_status,details
+EVT-001,REQ-001,2026-03-26T10:15:00-07:00,USR-001,Moham Example,request_created,,requested,Initial request submitted from Slack

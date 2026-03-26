@@ -1,0 +1,2 @@
+item_id,item_name,category,description,unit,quantity_on_hand,reorder_point,preferred_vendor_id,vendor_sku,storage_location,last_counted_at,status,notes
+INV-001,USB-C Cable,Cables,1 meter USB-C to USB-C cable,each,24,10,VND-001,ACM-USBC-1M,Shelf A1,2026-03-26,active,Standard issue cable

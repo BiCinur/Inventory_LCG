@@ -1,0 +1,2 @@
+vendor_id,vendor_name,contact_name,email,phone,website,default_currency,status,notes
+VND-001,Acme Supplies,Jordan Lee,purchasing@acme.example,+1-555-0100,https://acme.example,USD,active,Primary office supplier

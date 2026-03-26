@@ -1,0 +1,2 @@
+movement_id,item_id,movement_type,quantity,unit,related_request_id,performed_by_user_id,performed_by_name,performed_at,storage_location,notes
+MOV-001,INV-001,receive,24,each,,USR-002,Nadia Buyer,2026-03-26T09:00:00-07:00,Shelf A1,Initial stock load
