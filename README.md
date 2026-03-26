@@ -30,20 +30,66 @@ This gives you readable files now and a clean upgrade path to SQLite or Postgres
 - [data/purchase_requests.csv](data/purchase_requests.csv): current purchase request state.
 - [data/purchase_request_events.csv](data/purchase_request_events.csv): purchase request audit trail.
 - [scripts/validate_csv.py](scripts/validate_csv.py): validates required columns, IDs, and references.
+- [app/storage/csv_store.py](app/storage/csv_store.py): CSV reader/writer with a simple lock file.
+- [app/services/purchasing_service.py](app/services/purchasing_service.py): purchase request creation and status changes.
+- [app/services/inventory_service.py](app/services/inventory_service.py): inventory search, low-stock reporting, and receiving stock.
+- [app/bot/slack_app.py](app/bot/slack_app.py): Slack app entrypoint.
 
-## How to start from scratch
+## Application status
 
-1. Replace the sample rows in `data/users.csv`, `data/projects.csv`, and `data/vendors.csv` with your real team data.
-2. Seed `data/inventory_items.csv` with the items you already keep in stock.
-3. Run `python scripts/validate_csv.py` after manual edits.
-4. Build a Slack bot on top of this contract. Start with:
-   - `/inventory search`
-   - `/inventory request`
-   - `/inventory request-status`
-   - `/inventory receive`
-5. Make the bot the default writer for purchase requests and inventory movements.
-6. Add daily backups and a simple report that summarizes open requests and low-stock items.
-7. When editing volume grows, move the source of truth to SQLite and keep these CSV files as import/export views.
+The repo now includes a working scaffold for:
+
+- shared CSV schema metadata
+- a CSV storage layer with serialized writes
+- a purchasing service
+- an inventory service
+- a Slack bot entrypoint with `/inventory` subcommands and modals
+
+## Run locally
+
+1. Install Python 3.11 or newer.
+2. Create a virtual environment and install dependencies:
+   - `python -m venv .venv`
+   - `.venv\Scripts\activate`
+   - `pip install -r requirements.txt`
+3. Copy `.env.example` to `.env`.
+4. Set Slack credentials in `.env`:
+   - `SLACK_BOT_TOKEN`
+   - `SLACK_APP_TOKEN` for Socket Mode
+   - `SLACK_SIGNING_SECRET` only if you want HTTP mode instead
+5. Replace the sample rows in `data/users.csv`, `data/projects.csv`, and `data/vendors.csv` with your real team data.
+6. Seed `data/inventory_items.csv` with your real stock.
+7. Run `python scripts/validate_csv.py`.
+8. Start the bot with `python -m app.bot.slack_app`.
+
+## Slack setup
+
+Recommended MVP setup:
+
+- Enable Socket Mode in your Slack app.
+- Add the `commands`, `chat:write`, and `users:read` scopes your workflow needs.
+- Create one slash command: `/inventory`
+- Route all inventory actions through that one command using subcommands.
+
+## Supported bot commands
+
+- `/inventory search <text>`
+- `/inventory request [item name]`
+- `/inventory request-status <request_id>`
+- `/inventory low-stock`
+- `/inventory receive <request_id>`
+- `/inventory set-status <request_id> <approved|ordering|ordered|rejected|cancelled> [note]`
+
+Use `/inventory receive` for the final receiving step so the bot updates both the request tables and the inventory tables together.
+
+## Next improvements
+
+Good next steps after this scaffold:
+
+- add unit tests around `CSVStore`, `PurchasingService`, and `InventoryService`
+- tighten Slack scopes and role checks for purchaser-only actions
+- add backups and daily summary jobs
+- move to SQLite later if concurrent editing becomes frequent
 
 ## MVP rule of thumb
 

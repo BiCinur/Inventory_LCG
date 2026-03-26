@@ -148,15 +148,10 @@ class PurchasingService:
         actual_unit_price: str = "",
         notes: str = "",
     ) -> dict[str, str]:
-        if new_status not in {
-            "requested",
-            "approved",
-            "ordering",
-            "ordered",
-            "received",
-            "rejected",
-            "cancelled",
-        }:
+        allowed_statuses = {"requested", "approved", "ordering", "ordered", "rejected", "cancelled"}
+        if new_status not in allowed_statuses:
+            if new_status == "received":
+                raise ValidationError("Use the receive workflow to mark a request as received.")
             raise ValidationError(f"Unsupported request status: {new_status}")
 
         actor = self.get_user_by_slack_user_id(actor_slack_user_id)
@@ -197,7 +192,7 @@ class PurchasingService:
             updated["request_status"] = new_status
             updated["purchasing_outcome"] = DEFAULT_PURCHASING_OUTCOME_BY_STATUS[new_status]
 
-            if new_status in {"ordering", "ordered", "received"}:
+            if new_status in {"ordering", "ordered"}:
                 updated["purchaser_user_id"] = actor["user_id"]
                 updated["purchaser_name"] = actor["full_name"]
 
@@ -209,10 +204,8 @@ class PurchasingService:
                 updated["actual_unit_price"] = actual_value
             if po_number.strip():
                 updated["po_number"] = po_number.strip()
-            if new_status in {"ordered", "received"} and not updated.get("ordered_at", ""):
+            if new_status == "ordered" and not updated.get("ordered_at", ""):
                 updated["ordered_at"] = now
-            if new_status == "received" and not updated.get("received_at", ""):
-                updated["received_at"] = now
             if notes.strip():
                 updated["notes"] = self._append_note(updated.get("notes", ""), notes.strip())
 
